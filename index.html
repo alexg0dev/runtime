@@ -119,7 +119,7 @@
                 </div>
                 <div class="bg-gray-700 p-6 rounded-lg shadow-md">
                     <p class="text-lg font-semibold mb-2 text-gray-200">Disk Space <span class="text-gray-400 text-sm">(An estimate)</span></p>
-                    <p id="disk-space" class="text-2xl text-green-300">45% free</p>
+                    <p id="disk-space" class="text-2xl text-yellow-300">62% free</p>
                 </div>
                 <div class="bg-gray-700 p-6 rounded-lg shadow-md">
                     <p class="text-lg font-semibold mb-2 text-gray-200">Network Status <span class="text-gray-400 text-sm">(An estimate)</span></p>
@@ -148,10 +148,6 @@
 
         function getRandomMemoryUsage() {
             return getRandomInt(52, 63); // Between 52% and 63%
-        }
-
-        function getRandomDiskSpace() {
-            return getRandomInt(48, 61); // Between 48% and 61%
         }
 
         function getNetworkStatus() {
@@ -208,10 +204,11 @@
                 cpuUsage.textContent = `${getRandomCPUUsage()}%`; // Random CPU usage between 10-31%
                 const memory = getRandomMemoryUsage(); // Random Memory usage between 52-63%
                 memoryUsage.textContent = `${memory}%`;
-                const disk = getRandomDiskSpace(); // Random Disk space between 48-61%
-                const diskColor = disk <= 57 ? 'text-green-300' : 'text-yellow-300';
-                diskSpace.textContent = `${disk}% free`;
-                diskSpace.className = `text-2xl ${diskColor}`;
+                
+                // Fixed disk space value of 62%
+                diskSpace.textContent = `62% free`;
+                diskSpace.className = `text-2xl text-yellow-300`;
+                
                 networkStatus.textContent = getNetworkStatus(); // Random network status
                 
                 // Hide loading spinner
