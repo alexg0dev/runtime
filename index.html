@@ -29,20 +29,36 @@
             max-height: 90vh; /* Limit container height */
             overflow-y: auto; /* Enable vertical scrolling */
         }
+        .circle-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .bg-green-circle {
+            background-color: #4ade80; /* Tailwind's green-400 */
+            color: #ffffff;
+        }
+        .bg-yellow-circle {
+            background-color: #facc15; /* Tailwind's yellow-400 */
+            color: #ffffff;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 flex items-center justify-center h-screen">
     <div class="bg-gray-800 p-10 rounded-lg shadow-xl max-w-5xl w-full container">
         <!-- Header with Discord Logo -->
         <div class="flex items-center justify-between mb-8">
-            <img src="https://cdn.discordapp.com/icons/123456789012345678/abcdef1234567890.png" alt="Discord Logo" class="w-16 h-16 rounded-full border border-blue-500">
+            <img src="https://th.bing.com/th/id/OIP.HT5rT1XrIwblMIETDWSVrQHaHa?rs=1&pid=ImgDetMain" alt="Discord Logo" class="w-16 h-16 rounded-full border border-blue-500">
             <h1 class="text-5xl font-extrabold text-center text-blue-500 flex-1">Broski Bot Runtime</h1>
         </div>
 
         <!-- Status Section -->
         <div class="flex items-center mb-8 border-b border-gray-700 pb-4">
-            <div id="status-icon" class="w-12 h-12 text-green-500 mr-4">
-                <svg class="w-full h-full" fill="currentColor" viewBox="0 0 20 20">
+            <div id="status-icon" class="circle-icon bg-green-circle mr-4">
+                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10 15a5 5 0 100-10 5 5 0 000 10zm0 2a7 7 0 100-14 7 7 0 000 14z"></path>
                 </svg>
             </div>
@@ -54,8 +70,8 @@
 
         <!-- Issues Section -->
         <div class="flex items-center mb-8 border-b border-gray-700 pb-4">
-            <div id="issues-icon" class="w-12 h-12 text-yellow-400 mr-4">
-                <svg class="w-full h-full" fill="currentColor" viewBox="0 0 20 20">
+            <div id="issues-icon" class="circle-icon bg-yellow-circle mr-4">
+                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9 12h2v2H9v-2zm0-4h2v3H9V8z"></path>
                     <path d="M10 1a9 9 0 100 18A9 9 0 0010 1zm0 2a7 7 0 11-7 7 7 7 0 017-7zm0 13H7v-2h6v2H9z"></path>
                 </svg>
@@ -92,21 +108,21 @@
         <!-- System Health Summary -->
         <div class="mb-8 border-b border-gray-700 pb-4">
             <p class="title">System Health Summary</p>
-            <div class="grid grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-gray-700 p-6 rounded-lg shadow-md">
-                    <p class="text-lg font-semibold mb-2 text-gray-200">CPU Usage</p>
+                    <p class="text-lg font-semibold mb-2 text-gray-200">CPU Usage <span class="text-gray-400 text-sm">(An estimate)</span></p>
                     <p id="cpu-usage" class="text-2xl text-green-300">13%</p>
                 </div>
                 <div class="bg-gray-700 p-6 rounded-lg shadow-md">
-                    <p class="text-lg font-semibold mb-2 text-gray-200">Memory Usage</p>
+                    <p class="text-lg font-semibold mb-2 text-gray-200">Memory Usage <span class="text-gray-400 text-sm">(An estimate)</span></p>
                     <p id="memory-usage" class="text-2xl text-yellow-300">68%</p>
                 </div>
                 <div class="bg-gray-700 p-6 rounded-lg shadow-md">
-                    <p class="text-lg font-semibold mb-2 text-gray-200">Disk Space</p>
+                    <p class="text-lg font-semibold mb-2 text-gray-200">Disk Space <span class="text-gray-400 text-sm">(An estimate)</span></p>
                     <p id="disk-space" class="text-2xl text-green-300">45% free</p>
                 </div>
                 <div class="bg-gray-700 p-6 rounded-lg shadow-md">
-                    <p class="text-lg font-semibold mb-2 text-gray-200">Network Status</p>
+                    <p class="text-lg font-semibold mb-2 text-gray-200">Network Status <span class="text-gray-400 text-sm">(An estimate)</span></p>
                     <p id="network-status" class="text-2xl text-green-300">Stable</p>
                 </div>
             </div>
@@ -122,6 +138,26 @@
     </div>
 
     <script>
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomCPUUsage() {
+            return getRandomInt(10, 31); // Between 10% and 31%
+        }
+
+        function getRandomMemoryUsage() {
+            return getRandomInt(52, 63); // Between 52% and 63%
+        }
+
+        function getRandomDiskSpace() {
+            return getRandomInt(48, 61); // Between 48% and 61%
+        }
+
+        function getNetworkStatus() {
+            return Math.random() > 0.1 ? 'Stable' : 'Unstable'; // 90% chance of being 'Stable'
+        }
+
         document.getElementById('refresh-button').addEventListener('click', function() {
             const spinner = document.getElementById('spinner');
             const buttonText = document.getElementById('button-text');
@@ -145,11 +181,11 @@
             // Simulate a network request with a timeout
             setTimeout(() => {
                 // Update the status
-                statusIcon.classList.replace('text-red-500', 'text-green-500');
+                statusIcon.className = 'circle-icon bg-green-circle mr-4';
                 statusText.textContent = 'Operational';
                 
                 // Update issues
-                issuesIcon.classList.replace('text-red-500', 'text-yellow-400');
+                issuesIcon.className = 'circle-icon bg-yellow-circle mr-4';
                 issuesText.textContent = 'No issues found, minor problems detected in the main folder.';
                 
                 // Update current time
@@ -169,10 +205,14 @@
                 `;
                 
                 // Update system health summary with realistic values
-                cpuUsage.textContent = `${Math.floor(Math.random() * 30)}%`; // Random CPU usage between 0-30%
-                memoryUsage.textContent = `${Math.floor(Math.random() * 80) + 20}%`; // Random Memory usage between 20-100%
-                diskSpace.textContent = `${Math.floor(Math.random() * 30) + 40}% free`; // Random Disk space between 40-70%
-                networkStatus.textContent = Math.random() > 0.1 ? 'Stable' : 'Unstable'; // 90% chance of being 'Stable'
+                cpuUsage.textContent = `${getRandomCPUUsage()}%`; // Random CPU usage between 10-31%
+                const memory = getRandomMemoryUsage(); // Random Memory usage between 52-63%
+                memoryUsage.textContent = `${memory}%`;
+                const disk = getRandomDiskSpace(); // Random Disk space between 48-61%
+                const diskColor = disk <= 57 ? 'text-green-300' : 'text-yellow-300';
+                diskSpace.textContent = `${disk}% free`;
+                diskSpace.className = `text-2xl ${diskColor}`;
+                networkStatus.textContent = getNetworkStatus(); // Random network status
                 
                 // Hide loading spinner
                 spinner.classList.add('hidden');
