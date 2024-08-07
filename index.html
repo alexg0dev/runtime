@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broski Bot Runtime</title>
+    <!-- Link to Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border-top: 4px solid #ffffff;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .title {
+            font-size: 1.5rem; /* Tailwind's text-2xl */
+            font-weight: 700; /* Tailwind's font-semibold */
+            color: #e5e7eb; /* Tailwind's text-gray-300 */
+            margin-bottom: 1rem; /* Tailwind's mb-4 */
+        }
+        .container {
+            max-height: 90vh; /* Limit container height */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-gray-800 p-10 rounded-lg shadow-xl max-w-5xl w-full container">
+        <!-- Header with Discord Logo -->
+        <div class="flex items-center justify-between mb-8">
+            <img src="https://cdn.discordapp.com/icons/123456789012345678/abcdef1234567890.png" alt="Discord Logo" class="w-16 h-16 rounded-full border border-blue-500">
+            <h1 class="text-5xl font-extrabold text-center text-blue-500 flex-1">Broski Bot Runtime</h1>
+        </div>
+
+        <!-- Status Section -->
+        <div class="flex items-center mb-8 border-b border-gray-700 pb-4">
+            <div id="status-icon" class="w-12 h-12 text-green-500 mr-4">
+                <svg class="w-full h-full" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 15a5 5 0 100-10 5 5 0 000 10zm0 2a7 7 0 100-14 7 7 0 000 14z"></path>
+                </svg>
+            </div>
+            <div id="status-message">
+                <p class="text-lg font-semibold">Status:</p>
+                <p id="status-text" class="text-2xl font-bold text-green-300">Operational</p>
+            </div>
+        </div>
+
+        <!-- Issues Section -->
+        <div class="flex items-center mb-8 border-b border-gray-700 pb-4">
+            <div id="issues-icon" class="w-12 h-12 text-yellow-400 mr-4">
+                <svg class="w-full h-full" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12h2v2H9v-2zm0-4h2v3H9V8z"></path>
+                    <path d="M10 1a9 9 0 100 18A9 9 0 0010 1zm0 2a7 7 0 11-7 7 7 7 0 017-7zm0 13H7v-2h6v2H9z"></path>
+                </svg>
+            </div>
+            <div id="issues-message">
+                <p class="text-lg font-semibold">Issues:</p>
+                <p id="issues-text" class="text-xl font-semibold text-yellow-300">No issues found, minor problems detected in the main folder.</p>
+            </div>
+        </div>
+
+        <!-- Live Time Section -->
+        <div class="mb-8 border-b border-gray-700 pb-4">
+            <p class="title">Live Time:</p>
+            <p id="current-time" class="text-xl text-gray-300">Bot is continuing to be online at (current time) live time.</p>
+        </div>
+
+        <!-- Code Metrics Section -->
+        <div class="mb-8 border-b border-gray-700 pb-4">
+            <p class="title">Code Metrics</p>
+            <p class="text-lg text-gray-300">Total lines of code: <span id="code-lines" class="font-semibold text-gray-200">304</span></p>
+            <p class="text-lg text-gray-300">Last update: <span id="last-update" class="font-semibold text-gray-200">August 7, 2024</span></p>
+        </div>
+
+        <!-- Recent Activity Log -->
+        <div class="mb-8 border-b border-gray-700 pb-4">
+            <p class="title">Recent Activity</p>
+            <ul id="activity-log" class="list-disc pl-5 text-gray-300">
+                <li>Bot started successfully at 6:01 AM</li>
+                <li>Configuration updates applied at 6:01 AM</li>
+                <li>Routine maintenance completed at 6:01 AM</li>
+            </ul>
+        </div>
+
+        <!-- System Health Summary -->
+        <div class="mb-8 border-b border-gray-700 pb-4">
+            <p class="title">System Health Summary</p>
+            <div class="grid grid-cols-2 gap-6">
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md">
+                    <p class="text-lg font-semibold mb-2 text-gray-200">CPU Usage</p>
+                    <p id="cpu-usage" class="text-2xl text-green-300">13%</p>
+                </div>
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md">
+                    <p class="text-lg font-semibold mb-2 text-gray-200">Memory Usage</p>
+                    <p id="memory-usage" class="text-2xl text-yellow-300">68%</p>
+                </div>
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md">
+                    <p class="text-lg font-semibold mb-2 text-gray-200">Disk Space</p>
+                    <p id="disk-space" class="text-2xl text-green-300">45% free</p>
+                </div>
+                <div class="bg-gray-700 p-6 rounded-lg shadow-md">
+                    <p class="text-lg font-semibold mb-2 text-gray-200">Network Status</p>
+                    <p id="network-status" class="text-2xl text-green-300">Stable</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Refresh Button -->
+        <div class="text-center">
+            <button id="refresh-button" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-200 ease-in-out flex items-center justify-center">
+                <div id="spinner" class="spinner hidden mr-2"></div>
+                <span id="button-text">Refresh</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('refresh-button').addEventListener('click', function() {
+            const spinner = document.getElementById('spinner');
+            const buttonText = document.getElementById('button-text');
+            const statusIcon = document.getElementById('status-icon');
+            const statusText = document.getElementById('status-text');
+            const issuesIcon = document.getElementById('issues-icon');
+            const issuesText = document.getElementById('issues-text');
+            const currentTime = document.getElementById('current-time');
+            const codeLines = document.getElementById('code-lines');
+            const lastUpdate = document.getElementById('last-update');
+            const activityLog = document.getElementById('activity-log');
+            const cpuUsage = document.getElementById('cpu-usage');
+            const memoryUsage = document.getElementById('memory-usage');
+            const diskSpace = document.getElementById('disk-space');
+            const networkStatus = document.getElementById('network-status');
+            
+            // Show loading spinner
+            spinner.classList.remove('hidden');
+            buttonText.textContent = 'Refreshing...';
+
+            // Simulate a network request with a timeout
+            setTimeout(() => {
+                // Update the status
+                statusIcon.classList.replace('text-red-500', 'text-green-500');
+                statusText.textContent = 'Operational';
+                
+                // Update issues
+                issuesIcon.classList.replace('text-red-500', 'text-yellow-400');
+                issuesText.textContent = 'No issues found, minor problems detected in the main folder.';
+                
+                // Update current time
+                const now = new Date();
+                const timeString = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+                currentTime.textContent = `Bot is continuing to be online at ${timeString} live time.`;
+                
+                // Update code metrics
+                codeLines.textContent = '304'; // Static value for demo
+                lastUpdate.textContent = `${now.toLocaleDateString()}`;
+                
+                // Update activity log with specific time
+                activityLog.innerHTML = `
+                    <li>Bot started successfully at 6:01 AM</li>
+                    <li>Configuration updates applied at 6:01 AM</li>
+                    <li>Routine maintenance completed at 6:01 AM</li>
+                `;
+                
+                // Update system health summary with realistic values
+                cpuUsage.textContent = `${Math.floor(Math.random() * 30)}%`; // Random CPU usage between 0-30%
+                memoryUsage.textContent = `${Math.floor(Math.random() * 80) + 20}%`; // Random Memory usage between 20-100%
+                diskSpace.textContent = `${Math.floor(Math.random() * 30) + 40}% free`; // Random Disk space between 40-70%
+                networkStatus.textContent = Math.random() > 0.1 ? 'Stable' : 'Unstable'; // 90% chance of being 'Stable'
+                
+                // Hide loading spinner
+                spinner.classList.add('hidden');
+                buttonText.textContent = 'Refresh';
+            }, 2000);
+        });
+
+        // Initialize the page with the current time
+        document.addEventListener('DOMContentLoaded', () => {
+            const now = new Date();
+            const timeString = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+            document.getElementById('current-time').textContent = `Bot is continuing to be online at ${timeString} live time.`;
+        });
+    </script>
+</body>
+</html>
